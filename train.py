@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-from chainer import optimizers
+from chainer import cuda, optimizers
+import numpy as np
 from progressbar import ProgressBar
 import random
 import six.moves.cPickle as pickle
@@ -13,7 +14,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--data_dir', type=str, default='data')
     parser.add_argument('-e', '--epoch', type=int, default=100)
+    parser.add_argument('-g', '--gpu', default=-1, type=int, help='GPU ID (negative value indicates CPU)')
     args = parser.parse_args()
+
+    if args.gpu >= 0:
+        cuda.check_cuda_available()
+    xp = cuda.cupy if args.gpu >=0 else np
+
+    if args.gpu >= 0:
+        cuda.get_device(args.gpu).use()
+        model.to_gpu()
 
     # init optimizer
     optimizer = optimizers.Adam()
@@ -21,7 +31,7 @@ if __name__ == '__main__':
 
     # load data
     data = []
-    walk_dir(args.data_dir, lambda i, f: data.extend([(num_to_label(i), load_image(f))]))
+    walk_dir(args.data_dir, lambda i, f: data.extend([(num_to_label(xp, i), load_image(xp, f))]))
 
     # learn
     for i in range(args.epoch):

@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import numpy as np
 import os
 from PIL import Image
 
-def load_image(file_path, resize=220):
+def load_image(np, file_path, resize=220):
     img = Image.open(file_path)
     img = img.resize((resize, resize))
     img = np.asarray(img).transpose((2, 0, 1))
@@ -12,10 +11,10 @@ def load_image(file_path, resize=220):
     data[0] = img
     return data.astype(np.float32)
 
-def empty_label():
+def empty_label(np):
     return np.zeros((1, 1)).astype(np.float32)
 
-def num_to_label(num):
+def num_to_label(np, num):
     return np.asarray([[num]]).astype(np.float32)
 
 def walk_dir(dir_name, f):
