@@ -28,4 +28,7 @@ if __name__ == '__main__':
         cuda.get_device(args.gpu).use()
 
     model = pickle.load(open(args.model, 'rb'))
+    if args.gpu >= 0:
+        model.to_gpu()
+
     walk_dir(args.data_dir, lambda _, f: predict_image(xp, model, f))

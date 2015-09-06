@@ -54,4 +54,5 @@ if __name__ == '__main__':
     print 'ヨッシャ！ 学習おわったでｗ'
 
     # dump model
+    model.to_cpu()
     pickle.dump(model, open('AlexNet_epoch_%s.pickle' % (args.epoch), 'wb'), -1)
