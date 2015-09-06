@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+from chainer import cuda
 import numpy as np
 import os
 import six.moves.cPickle as pickle
@@ -25,7 +26,6 @@ if __name__ == '__main__':
 
     if args.gpu >= 0:
         cuda.get_device(args.gpu).use()
-        model.to_gpu()
 
     model = pickle.load(open(args.model, 'rb'))
     walk_dir(args.data_dir, lambda _, f: predict_image(xp, model, f))
